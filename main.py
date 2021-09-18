@@ -3,12 +3,19 @@ import time
 
 path = input('Enter path of folder to cleanup: ')
 print('Enter threshold age for file deletion')
-print('For example, an input of 3 will delete any files older than 3 days')
+print('For example, an input of 3 will delete any files older than, and old as 3 days')
 threshold = input()
 
+while threshold == '0':
+    new_threshold = input('Cannot enter a value of 0, please enter a new value: ')
+    if new_threshold != '0':
+        threshold = new_threshold
+        break
 
-path = path + '/'
-directory_list = os.listdir(path)
+if os.path.exists(path):
+    path = path + '/'
+    directory_list = os.listdir(path)
+
 for file in directory_list:
     name, ext = os.path.splitext(file)
     age = time.time() - os.stat(path + file).st_ctime
@@ -19,8 +26,9 @@ for file in directory_list:
 
     if minutes >= 60:
         if hours >= 24:
-            if str(days) > threshold:
+            if str(days) >= threshold:
                 os.remove(path + file)
+                print('files removed')
             else:
                 print(name + ext + ' is only ' + str(days) + ' days old')
         else:
